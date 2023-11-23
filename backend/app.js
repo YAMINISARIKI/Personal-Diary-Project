@@ -22,16 +22,59 @@ mongoose.connect('mongodb+srv://Yamini:AJNWs0f7JClq1ogA@cluster0.qumzf5t.mongodb
 
 //--------------------adding signed up data to data base----------------
 
-app.post('/signup', async (req, res) => {
-    const { username, password } = req.body;
-    try {
-      const user = new login({ username, password });
-      await user.save();
-      res.status(201).send('User created successfully');
-    } catch (error) {
-      res.status(500).send(error.message);
+// app.post('/signup', async (req, res) => {
+//     const { username, password } = req.body;
+//     try {
+//       const user = new login({ username, password });
+//       await user.save();
+//       res.status(201).send('User created successfully');
+//     } catch (error) {
+//       res.status(500).send(error.message);
+//     }
+//   });
+
+
+app.get('/check-username/:username', async (req, res) => {
+  const usernameToCheck = req.params.username;
+
+  try {
+    const existingUser = await login.findOne({ username: usernameToCheck });
+
+    if (existingUser) {
+      res.json({ error: 'Username already exists' });
+    } else {
+      res.json({ message: 'Username available' });
     }
-  });
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+});
+
+// Endpoint to handle user signup
+app.post('/signup', async (req, res) => {
+  const { username, password } = req.body;
+
+  try {
+    // --------------Check if the username already exists
+    const existingUser = await login.findOne({ username });
+
+    if (existingUser) {
+      return res.status(400).json({ error: 'Username already exists' });
+    }
+
+    //--------------- If the username doesn't exist, create a new user and add data to database
+    const user = new login({ username, password });
+    await user.save();
+    res.status(201).send('User created successfully');
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+});
+
+
+
+//--------------------get signup accounts in admin page-------------------------
+
 
   app.get('/getaccount',async(req,res,next)=>{
     let accountdata
@@ -85,7 +128,7 @@ const storage = multer.diskStorage({
     filename: function (req, file, cb) {
     //   const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
     //   cb(null, file.fieldname + '-' + uniqueSuffix)
-    cb(null,Date.now()+"_"+file.originalname)
+    cb(null,Date.now()+"_"+file.originalname) 
     },
   })
   
@@ -116,22 +159,27 @@ app.post('/adddata',upload.single("myfile"),async(req,res,next)=>{
 
 //------------------getting added data into showdentry page ------------------------
 
-app.post('/getentries/', async (req, res,next) => {
-  
+
+app.post('/getentries', async (req, res) => {
   try {
-      const entries = await data.find();
-      const result = entries.filter((entry)=>{
-        return entry.usermail===req.body.email;
-      })
-      res.json(result);
-      
+    let selectedMonth = req.body.month; // Extract selected month from the request body
+    selectedMonth = '.'+selectedMonth;
+    console.log(selectedMonth)
+    const entries = await data.find({
+      title: {
+        $regex: selectedMonth, // Filter entries based on the selected month
+      },
+    });
+
+    const result = entries.filter((entry) => {
+      return entry.usermail === req.body.email;
+    });
+
+    res.json(result);
   } catch (error) {
-      res.status(500).send(error.message);
+    res.status(500).send(error.message);
   }
 });
-
-
-
 
 //-------Deleting the added diary entries-------------------------------
 

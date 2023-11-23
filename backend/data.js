@@ -12,11 +12,14 @@ let DataSchema = new Schema({
     },
     imagepath:{
         type:String,
-        required:true
+        // required:true
     },
     usermail: {
         type: String,
         required: true
-    }
+     },
+    month: {
+      type: Number, // or String, depending on your preference and use case
+    },
 })
 export default mongoose.model("data",DataSchema);

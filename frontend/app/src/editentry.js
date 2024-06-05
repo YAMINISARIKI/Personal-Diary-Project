@@ -43,6 +43,7 @@ const EditEntry = () => {
                 }
             });
             alert('Entry updated successfully');
+            window.location.replace('/show');
             // Redirect to the appropriate route after successful update
         } catch (error) {
             console.error('Error updating entry: ', error);

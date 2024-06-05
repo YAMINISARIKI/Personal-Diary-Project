@@ -21,7 +21,7 @@ const Signin = () => {
     };
 
   return (
-    <div style={{backgroundImage:`url('/login3.jpg')`,backgroundSize:"cover", backgroundRepeat: 'no-repeat',height:735,width:1440}}><br/><br/><br/><br/><br/>
+    <div style={{backgroundImage:`url('/login3.jpg')`,backgroundSize:"cover", backgroundRepeat: 'no-repeat',height:'100vh',width:'100vw'}}><br/><br/><br/><br/><br/>
       <Link to='/'><button className='signinback'>Back to Main Page</button></Link>
       <h1 className='cap1'>Welcome Back !</h1>
       <form onSubmit={handleLogin}>

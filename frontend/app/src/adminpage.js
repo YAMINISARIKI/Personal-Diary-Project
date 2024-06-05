@@ -1,56 +1,85 @@
-import React,{ useState,useEffect } from "react";
-import { Link } from "react-router-dom";
-import axios from "axios";
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { useParams,Link } from 'react-router-dom';
 
-function Adminpage(){
-    const [accounts,setAccounts] = useState([])
-    useEffect(()=>{
-        axios.get('http://localhost:2000/getaccount')
-        .then((response)=>{
-            setAccounts(response.data.accountdata);
-        })
-    },[]);
+const EditEntry = () => {
+    const { id } = useParams();
+    const [entry, setEntry] = useState({});
+    const [title, setTitle] = useState('');
+    const [content, setContent] = useState('');
+    const [image, setImage] = useState(null);
+    const [preview, setPreview] = useState(null);
 
-    const DeleteUser = (id) =>{
-        axios.delete('http://localhost:2000/deleteuser/'+id)
-        .then(res=>{console.log(res)
-                alert("data deleted successfully")
-                window.location.reload()    
-    
-        })
-        .catch(err=>{console.log(err)})
-    }
+    useEffect(() => {
+        axios.get(`http://localhost:2000/getentrybyid/${id}`)
+            .then(response => {
+                setEntry(response.data.entry);
+                setTitle(response.data.entry.title);
+                setContent(response.data.entry.content);
+                setPreview(response.data.entry.imagepath ? `http://localhost:2000/uploads/${response.data.entry.imagepath}` : '');
+            })
+            .catch(error => {
+                console.error('Error fetching data: ', error);
+            });
+    }, [id]);
 
-    return(
-        <div >
-            <br/>
-            <Link to="/"><button style={{height:25,width:100,}}>LogOut</button></Link>
-            <h1>User Acounts</h1>
+
+    const handleEdit = async (e) => {
+        e.preventDefault();
+        const formData = new FormData();
+        formData.append('title', title);
+        formData.append('content', content);
+        if (image) {
+            formData.append('myfile', image);
+        }
+        else{
+            formData.append('imagepath',entry.imagepath);
+        }
+
+        try {
+            await axios.put(`http://localhost:2000/updateEntry/${id}`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+
+            alert('Entry updated successfully');
+            window.location.replace('/show');
+            
+        } catch (error) {
+            console.error('Error updating entry: ', error);
+            alert('Failed to update entry');
+        }
+    };
+
+    const handleImageChange = (e) => {
+        // setImage(e.target.files[0]); --no need to write
+        const file = e.target.files[0];
+        // setImage({ ...image, myfile: file });
+        setImage(file);
+
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setPreview(reader.result);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
+    return (
+        <div style={{backgroundImage:`url('/edit1.jpeg')`,backgroundSize:"cover", backgroundRepeat: 'no-repeat',height:'100vh',width:'100vw'}}>
             <br/><br/>
-           <center> <table align="center" border={1} style={{height:100,width:700,fontSize:23}}>
-                <thead>
-                    <tr>
-                    <th>s.no</th>
-                    <th>UserName</th>
-                    <th>Password</th>
-                    <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                {accounts.map((ele,index)=>{
-        return(
-            <tr key={index}>
-                <td><center>{index+1}</center></td>
-                <td><center>{ele.username}</center></td>
-                <td><center>{ele.password}</center></td>
-                <td><center><button style={{backgroundColor:'#EB1D36',height:30,width:100,fontSize:20}} onClick={()=>DeleteUser(ele._id)}>Delete</button></center></td>
-            </tr>
-        )
-    })}
-                </tbody>
-            </table>
-            </center>
+            <Link to='/show'><button  className='editbackbutton'>Back</button></Link>
+            <form onSubmit={handleEdit}>
+                <input type="text" value={title} className='titlebox' onChange={(e) => setTitle(e.target.value)} />
+                <input type="submit" className='update' value="Update" /><br /><br/>
+                <textarea value={content} className='contentbox' onChange={(e) => setContent(e.target.value)} /><br />
+                <input type="file" onChange={handleImageChange} /><br />
+                {preview && <img src={preview} alt="Preview" style={{ width: '200px', height: '200px' }} />}<br />
+            </form>
         </div>
-    )
-}
-export default Adminpage;
+    );
+};
+
+export default EditEntry;

@@ -66,7 +66,7 @@ const EditEntry = () => {
     };
 
     return (
-        <div style={{backgroundImage:`url('/edit1.jpeg')`,backgroundSize:"cover", backgroundRepeat: 'no-repeat',height:735,width:1440}}>
+        <div style={{backgroundImage:`url('/edit1.jpeg')`,backgroundSize:"cover", backgroundRepeat: 'no-repeat',height:'100vh',width:'100vw'}}>
             <br/><br/>
             <Link to='/show'><button  className='editbackbutton'>Back</button></Link>
             <form onSubmit={handleEdit}>

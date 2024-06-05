@@ -60,7 +60,7 @@ const Addentry=()=>{
         localStorage.removeItem('user_mail');
     };
     return(
-        <div style={{backgroundImage:`url('/addpage.png')`,backgroundSize:"cover", backgroundRepeat: 'no-repeat',height:735,width:1440}}> 
+        <div style={{backgroundImage:`url('/addpage.png')`,backgroundSize:"cover", backgroundRepeat: 'no-repeat',height:'100vh',width:'100vw'}}> 
         <br/>  
             <Link to='/signin' onClick={handleLogout}><button className="logout">Logout</button></Link>
             <Link to='/show'><button className="show">Show entries</button></Link><br/><br/>

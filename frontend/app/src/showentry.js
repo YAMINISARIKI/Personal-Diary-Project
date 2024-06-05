@@ -40,8 +40,8 @@ const Showentry = () => {
         backgroundImage: `url('/showpage2.png')`,
         backgroundSize: 'cover',
         backgroundRepeat: 'no-repeat',
-        height: 735,
-        width: 1440,
+        height: '100vh',
+        width: '100vw',
       }}
     >
       <br />

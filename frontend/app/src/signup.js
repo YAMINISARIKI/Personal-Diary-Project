@@ -19,7 +19,7 @@ const Signup = () => {
   };
 
   return (
-    <div style={{backgroundImage:`url('/login3.jpg')`,backgroundSize:"cover", backgroundRepeat: 'no-repeat',height:735,width:1440}}>
+    <div style={{backgroundImage:`url('/login3.jpg')`,backgroundSize:"cover", backgroundRepeat: 'no-repeat',height:'100vh',width:'100vw'}}>
       <br/><br/><br/><br/><br/>
       <Link to='/'><button className='signupback'> Back to Mainpage</button></Link>
       <h1 className='cap1'>Let's get started !</h1>

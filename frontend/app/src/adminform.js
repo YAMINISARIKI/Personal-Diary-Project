@@ -18,7 +18,7 @@ const Adminform = () => {
     };
 
   return (
-    <div style={{backgroundImage:`url('/adminpage.png')`,backgroundSize:"cover", backgroundRepeat: 'no-repeat',height:735,width:1440}}>
+    <div style={{backgroundImage:`url('/adminpage.png')`,backgroundSize:"cover", backgroundRepeat: 'no-repeat',height:'100vh',width:'100vw'}}>
          <br/><br/><br/>
        <b><h1 style={{fontFamily:'bradley hand itc',fontSize:'55px'}}>Admin Login</h1></b> 
         <br/><br/><br/><br/><br/>
